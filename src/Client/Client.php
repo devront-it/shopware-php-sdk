@@ -34,6 +34,9 @@ class Client implements ClientInterface
     public static function create(array $config = []): self
     {
         $handlerStack = HandlerStack::create(new CurlHandler());
+
+        $config[RequestOptions::VERIFY] = false;
+
         $handlerStack->push(Middleware::retry(function (
             $retries,
             RequestInterface $request,
@@ -82,7 +85,6 @@ class Client implements ClientInterface
         $options[RequestOptions::SYNCHRONOUS] = true;
         $options[RequestOptions::ALLOW_REDIRECTS] = false;
         $options[RequestOptions::HTTP_ERRORS] = false;
-        $options[RequestOptions::VERIFY] = false;
 
         return $this->sendAsync($request, $options)->wait();
     }
