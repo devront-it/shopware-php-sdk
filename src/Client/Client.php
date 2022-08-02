@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Vin\ShopwareSdk\Client;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use GuzzleHttp\ClientTrait as GuzzleClientTrait;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\TransferException;
@@ -15,9 +18,6 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\ClientTrait as GuzzleClientTrait;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use Psr\Http\Message\UriInterface;
 
 class Client implements ClientInterface
@@ -63,8 +63,9 @@ class Client implements ClientInterface
 
             return $config['sec_before_attempt'] * 1000 * $numberOfRetries;
         }));
+        $handlerStack->push(new TelescopeMiddleware());
 
-        $client =  new GuzzleClient(array_merge([
+        $client = new GuzzleClient(array_merge([
             'handler' => $handlerStack,
         ], $config));
 
@@ -81,6 +82,7 @@ class Client implements ClientInterface
         $options[RequestOptions::SYNCHRONOUS] = true;
         $options[RequestOptions::ALLOW_REDIRECTS] = false;
         $options[RequestOptions::HTTP_ERRORS] = false;
+        $options[RequestOptions::VERIFY] = false;
 
         return $this->sendAsync($request, $options)->wait();
     }
@@ -97,9 +99,9 @@ class Client implements ClientInterface
      * relative path to append to the base path of the client. The URL can
      * contain the query string as well.
      *
-     * @param string              $method  HTTP method.
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
+     * @param string $method HTTP method.
+     * @param string|UriInterface $uri URI object or string.
+     * @param array $options Request options to apply.
      *
      * @throws GuzzleException
      */
@@ -116,9 +118,9 @@ class Client implements ClientInterface
      * contain the query string as well. Use an array to provide a URL
      * template and additional variables to use in the URL template expansion.
      *
-     * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
+     * @param string $method HTTP method
+     * @param string|UriInterface $uri URI object or string.
+     * @param array $options Request options to apply.
      */
     public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
     {

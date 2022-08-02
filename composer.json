@@ -15,7 +15,8 @@
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "guzzlehttp/guzzle": "~7.4.5",
-        "psr/http-client": "^1.0"
+        "psr/http-client": "^1.0",
+        "laravel/telescope": "^4.9"
     },
     "require-dev": {
         "phpunit/phpunit": "*",

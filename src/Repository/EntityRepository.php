@@ -154,13 +154,11 @@ class EntityRepository implements RepositoryInterface
 
         $headers = ['fail-on-error' => true];
 
-        if (!\is_array($ids[array_key_first($ids)]))
-        {
+        if (!\is_array($ids[array_key_first($ids)])) {
             $data = array_map(function (string $id) {
                 return ['id' => $id];
             }, $ids);
-        } else
-        {
+        } else {
             $data = $ids;
         }
 
