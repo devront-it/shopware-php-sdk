@@ -1,5 +1,5 @@
 {
-    "name": "vin-sw/shopware-sdk",
+    "name": "devront-it/shopware-php-sdk",
     "description": "A PHP SDK for Shopware 6 Platform",
     "type": "library",
     "license": "MIT",
