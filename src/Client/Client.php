@@ -66,7 +66,7 @@ class Client implements ClientInterface
 
             return $config['sec_before_attempt'] * 1000 * $numberOfRetries;
         }));
-        $handlerStack->push(new TelescopeMiddleware());
+        // $handlerStack->push(new TelescopeMiddleware());
 
         $client = new GuzzleClient(array_merge([
             'handler' => $handlerStack,
